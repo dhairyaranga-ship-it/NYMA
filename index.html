@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>NYMA</title>
+
+<style>
+body {margin:0;background:#000;color:#fff;font-family:sans-serif;}
+header {display:flex;justify-content:space-between;padding:20px;border-bottom:1px solid #222;}
+.products {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:40px;}
+.card {background:#111;padding:20px;border-radius:10px;}
+button {border:1px solid white;background:none;color:white;padding:10px;cursor:pointer;}
+button:hover {background:white;color:black;}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>NYMA</h2>
+<div onclick="checkout()">Cart (<span id="count">0</span>)</div>
+</header>
+
+<div class="products" id="products"></div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+let cart = [];
+
+// Load products
+async function loadProducts(){
+  const res = await fetch("/products");
+  const data = await res.json();
+
+  document.getElementById("products").innerHTML =
+    data.map(p=>`
+      <div class="card">
+        <h3>${p.name}</h3>
+        <p>₹${p.price}</p>
+        <button onclick="addToCart('${p.name}',${p.price})">Add</button>
+      </div>
+    `).join("");
+}
+
+loadProducts();
+
+// Add to cart
+function addToCart(name, price){
+  cart.push({name, price});
+  document.getElementById("count").innerText = cart.length;
+}
+
+// Checkout
+async function checkout(){
+  let total = cart.reduce((s,i)=>s+i.price,0);
+
+  const res = await fetch("/create-order", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({amount: total, items: cart})
+  });
+
+  const order = await res.json();
+
+  new Razorpay({
+    key: "rzp_test_xxxxxx", // replace with your key
+    amount: order.amount,
+    currency: "INR",
+    order_id: order.id,
+    handler: async function (response){
+      await fetch("/verify", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          paymentId: response.razorpay_payment_id,
+          items: cart,
+          amount: total
+        })
+      });
+      alert("Order Successful 🎉");
+      cart = [];
+      document.getElementById("count").innerText = 0;
+    }
+  }).open();
+}
+</script>
+
+</body>
+</html>
