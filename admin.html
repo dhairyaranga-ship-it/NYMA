@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body style="background:black;color:white;text-align:center;font-family:sans-serif;">
+
+<h2>Admin Panel</h2>
+
+<input id="name" placeholder="Product Name">
+<input id="price" placeholder="Price">
+
+<button onclick="addProduct()">Add Product</button>
+
+<h3>Products</h3>
+<div id="list"></div>
+
+<script>
+async function addProduct(){
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+
+  await fetch("/add-product", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({name, price})
+  });
+
+  loadProducts();
+}
+
+async function loadProducts(){
+  const res = await fetch("/products");
+  const data = await res.json();
+
+  document.getElementById("list").innerHTML =
+    data.map(p=>`<p>${p.name} - ₹${p.price}</p>`).join("");
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
