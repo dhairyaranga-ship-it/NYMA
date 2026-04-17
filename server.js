@@ -6,8 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(".")); // serve frontend
 
-// MongoDB
-const mongoose = require("mongoose");
+// Mongodb
 
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDB Connected ✅"))
