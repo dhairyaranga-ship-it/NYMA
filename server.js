@@ -7,10 +7,11 @@ app.use(express.json());
 app.use(express.static(".")); // serve frontend
 
 // MongoDB
-mongoose.connect(process.env.MONGO_URL)
-.then(()=>console.log("DB Connected"))
-.catch(err=>console.log(err));
+const mongoose = require("mongoose");
 
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("MongoDB Connected ✅"))
+  .catch(err => console.log("MongoDB Error ❌", err));
 // Models
 const productSchema = new mongoose.Schema({
   name: String,
