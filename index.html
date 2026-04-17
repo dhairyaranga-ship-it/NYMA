@@ -21,16 +21,15 @@
       margin-top: 50px;
     }
 
-    container.innerHTML += `
+ container.innerHTML += `
   <div class="card">
-    <img src="${product.image}" class="product-img"/>
     <h3>${product.name}</h3>
     <p>₹${product.price}</p>
-    <button onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">
+    <button onclick="addToCart('${product.name}', ${product.price}, '')">
       Add to Cart
     </button>
   </div>
-`;
+`; 
 
  .product-img {
   width: 100%;
