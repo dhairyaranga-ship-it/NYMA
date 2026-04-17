@@ -94,52 +94,51 @@
   }
 
 <script>
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-async function loadProducts() {
-  const res = await fetch("/products");
-  const data = await res.json();
+  async function loadProducts() {
+    const res = await fetch("/products");
+    const data = await res.json();
 
-  const container = document.getElementById("products");
-  container.innerHTML = "";
+    const container = document.getElementById("products");
+    container.innerHTML = "";
 
-  data.forEach(product => {
-    container.innerHTML += `
-      <div class="card">
-        <img src="${product.image}" class="product-img"/>
-        <h3>${product.name}</h3>
-        <p>₹${product.price}</p>
-        <button onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">
-          Add to Cart
-        </button>
-      </div>
-    `;
-  });
-}
-
-function addToCart(name, price, image) {
-  const existing = cart.find(item => item.name === name);
-
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ name, price, image, qty: 1 });
+    data.forEach(product => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${product.image}" class="product-img"/>
+          <h3>${product.name}</h3>
+          <p>₹${product.price}</p>
+          <button onclick="addToCart('${product.name}', ${product.price}, '${product.image}')">
+            Add to Cart
+          </button>
+        </div>
+      `;
+    });
   }
 
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCartCount();
-}
+  function addToCart(name, price, image) {
+    const existing = cart.find(item => item.name === name);
 
-function updateCartCount() {
-  document.getElementById("cartCount").innerText =
-    cart.reduce((sum, item) => sum + item.qty, 0);
-}
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ name, price, image, qty: 1 });
+    }
 
-loadProducts();
-updateCartCount();
-</script>
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+  }
+
+  function updateCartCount() {
+    document.getElementById("cartCount").innerText =
+      cart.reduce((sum, item) => sum + item.qty, 0);
+  }
+
   loadProducts();
+  updateCartCount();
 </script>
+
 
 </body>
 </html>
