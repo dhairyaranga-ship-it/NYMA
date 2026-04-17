@@ -18,19 +18,29 @@ const productSchema = new mongoose.Schema({
   price: Number,
   image: String
 });
+const Product = mongoose.model("Product", productSchema);
 const Order = mongoose.model("Order", {
   items: Array,
   amount: Number,
   paymentId: String,
   createdAt: { type: Date, default: Date.now }
 });
-
+app.get("/products", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    console.log("ERROR:", err);
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
+});
 // Razorpay
+const Razorpay = require("razorpay");
+
 const razorpay = new Razorpay({
   key_id: process.env.KEY_ID,
   key_secret: process.env.KEY_SECRET
 });
-
 // Routes
 app.get('/products', async (req, res) => {
   try {
