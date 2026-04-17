@@ -13,16 +13,21 @@
 <div id="list"></div>
 
 <script>
-async function addProduct(){
+async function addProduct() {
   const name = document.getElementById("name").value;
   const price = document.getElementById("price").value;
+  const image = document.getElementById("image").value;
 
-  await fetch("/add-product", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({name, price})
+  await fetch("/products", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ name, price, image })
   });
 
+  alert("Product Added ✅");
+}
   loadProducts();
 }
 
