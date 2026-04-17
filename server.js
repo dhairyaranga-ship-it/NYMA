@@ -31,11 +31,15 @@ const razorpay = new Razorpay({
 });
 
 // Routes
-app.get("/products", async (req,res)=>{
-  const products = await Product.find();
-  res.json(products);
+app.get('/products', async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    console.error("ERROR:", err);
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
 });
-
 app.post("/add-product", async (req,res)=>{
   await Product.create(req.body);
   res.json({status:"added"});
