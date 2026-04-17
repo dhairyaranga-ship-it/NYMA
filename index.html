@@ -21,15 +21,17 @@
       margin-top: 50px;
     }
 
- container.innerHTML += `
-  <div class="card">
-    <h3>${product.name}</h3>
-    <p>₹${product.price}</p>
-    <button onclick="addToCart('${product.name}', ${product.price}, '')">
-      Add to Cart
-    </button>
-  </div>
-`; 
+data.forEach(product => {
+  container.innerHTML += `
+    <div class="card">
+      <h3>${product.name}</h3>
+      <p>₹${product.price}</p>
+      <button onclick="addToCart('${product.name}', ${product.price}, '')">
+        Add to Cart
+      </button>
+    </div>
+  `;
+});
 
  .product-img {
   width: 100%;
