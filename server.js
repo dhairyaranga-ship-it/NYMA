@@ -12,11 +12,11 @@ mongoose.connect(process.env.MONGO_URL)
 .catch(err=>console.log(err));
 
 // Models
-const Product = mongoose.model("Product", {
+const productSchema = new mongoose.Schema({
   name: String,
-  price: Number
+  price: Number,
+  image: String
 });
-
 const Order = mongoose.model("Order", {
   items: Array,
   amount: Number,
